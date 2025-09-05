@@ -1,17 +1,31 @@
+// Timer.js
 import React, { useState, useEffect, useRef } from "react";
 
 const Timer = React.forwardRef(({ seconds = 60, onTimeout, running = true }, ref) => {
   const [timeLeft, setTimeLeft] = useState(seconds);
   const intervalRef = useRef(null);
 
+  // expose reset to parent
   React.useImperativeHandle(ref, () => ({
-    reset: (newSec = seconds) => setTimeLeft(newSec),
+    reset: (newSec = seconds) => {
+      clearInterval(intervalRef.current);   // clear any old interval
+      setTimeLeft(newSec);
+      if (running) {
+        intervalRef.current = setInterval(() => setTimeLeft((t) => t - 1), 1000);
+      }
+    },
   }));
 
+  // start interval when running changes
   useEffect(() => {
-    if (!running) return;
+    if (!running) {
+      clearInterval(intervalRef.current);
+      return;
+    }
     setTimeLeft(seconds);
+    clearInterval(intervalRef.current);
     intervalRef.current = setInterval(() => setTimeLeft((t) => t - 1), 1000);
+
     return () => clearInterval(intervalRef.current);
   }, [seconds, running]);
 

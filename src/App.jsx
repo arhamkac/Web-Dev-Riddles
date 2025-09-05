@@ -20,22 +20,35 @@ export default function App() {
           {stage === "stage1" && (
             <StageOne
               onWin={() => setStage("stage2")}
-              onLose={() => { setResult("lose"); setStage("result"); }}
-              timeLimit={60}
+              onLose={() => {
+                setResult("lose");
+                setStage("result");
+              }}
+              timeLimit={30}
             />
           )}
 
           {stage === "stage2" && (
             <StageTwo
-              onWin={() => { setResult("win"); setStage("result"); }}
-              onLose={() => { setResult("lose"); setStage("result"); }}
+              onWin={() => {
+                setResult("win");
+                setStage("result");
+              }}
+              onTimeout={() => {
+                setResult("lose");
+                setStage("result");
+              }}
+              timeLimit={30}
             />
           )}
 
           {stage === "result" && (
             <Result
               status={result}
-              onRetry={() => { setStage("stage1"); setResult(null); }}
+              onRetry={() => {
+                setStage("stage1");
+                setResult(null);
+              }}
             />
           )}
         </main>

@@ -1,19 +1,24 @@
 import React, { useState, useMemo, useRef } from "react";
 import Timer from "./Timer";
 
-export default function StageTwo({ onWin, onTimeout }) {
+export default function StageTwo({ onWin, onTimeout, timeLimit = 30 }) {
   const [task, setTask] = useState(1);
   const [message, setMessage] = useState("");
   const timerRef = useRef();
 
-  // 50 elements in grid, pick one correct
+  // 60 randomized elements (shuffled)
   const elements = useMemo(() => {
     const count = 50;
     const correctIndex = Math.floor(Math.random() * count);
-    return Array.from({ length: count }, (_, i) => ({
+    let arr = Array.from({ length: count }, (_, i) => ({
       id: i,
       isCorrect: i === correctIndex,
     }));
+    for (let i = arr.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [arr[i], arr[j]] = [arr[j], arr[i]];
+    }
+    return arr;
   }, []);
 
   function handleHover(el) {
@@ -26,7 +31,7 @@ export default function StageTwo({ onWin, onTimeout }) {
     if (el.isCorrect) {
       setTask(2);
       setMessage("");
-      timerRef.current?.reset(); // reset timer for the next step
+      timerRef.current?.reset(timeLimit); // reset timer for homework part
     } else {
       setMessage("Nope, try another 😅");
     }
@@ -38,24 +43,23 @@ export default function StageTwo({ onWin, onTimeout }) {
         Stage 2 — The Hidden Secret 🕵️
       </h2>
 
-      {/* Timer always visible */}
+      {/* Timer */}
       <div className="mb-6">
         <Timer
           ref={timerRef}
-          seconds={30}
+          seconds={timeLimit}
           running={true}
-          onTimeout={onTimeout}
+          onTimeout={onTimeout} 
         />
       </div>
 
       {task === 1 && (
         <>
           <p className="text-sm sm:text-base text-white/80 mb-4 text-center">
-            One of these 50 spots hides the secret. Tap / click wisely!
+            One of these {elements.length} spots hides the secret. Tap / click wisely!
           </p>
 
-          {/* Responsive scattered grid */}
-          <div className="grid grid-cols-4 xs:grid-cols-5 sm:grid-cols-8 md:grid-cols-10 gap-3 sm:gap-4 md:gap-5">
+          <div className="grid grid-cols-4 xs:grid-cols-5 sm:grid-cols-8 md:grid-cols-12 gap-3 sm:gap-4 md:gap-5 w-full max-w-5xl">
             {elements.map((el) => (
               <button
                 key={el.id}
@@ -85,9 +89,10 @@ export default function StageTwo({ onWin, onTimeout }) {
             Only the most curious explorers will find it. 🔎
           </p>
 
-          {/* 🔒 Hidden clue (only visible via Inspect / View Source) */}
+          {/* 🔒 Hidden homework clue */}
           <p className="hidden">
-            🤫 Hidden clue: Curiosity is the key to Web Wing!
+            🔑 HOMEWORK CODE: <b>WEBWING-ORIENTATION-2025</b>
+            (psst... tell this to your seniors 😉)
           </p>
 
           <button
