@@ -6,7 +6,7 @@ export default function StageTwo({ onWin, onTimeout, timeLimit = 30 }) {
   const [message, setMessage] = useState("");
   const timerRef = useRef();
 
-  // 60 randomized elements (shuffled)
+  // 50 randomized elements (shuffled)
   const elements = useMemo(() => {
     const count = 50;
     const correctIndex = Math.floor(Math.random() * count);
@@ -29,9 +29,8 @@ export default function StageTwo({ onWin, onTimeout, timeLimit = 30 }) {
 
   function handleClick(el) {
     if (el.isCorrect) {
-      setTask(2);
+      setTask(2);       // move to homework stage
       setMessage("");
-      timerRef.current?.reset(timeLimit); // reset timer for homework part
     } else {
       setMessage("Nope, try another 😅");
     }
@@ -43,15 +42,17 @@ export default function StageTwo({ onWin, onTimeout, timeLimit = 30 }) {
         Stage 2 — The Hidden Secret 🕵️
       </h2>
 
-      {/* Timer */}
-      <div className="mb-6">
-        <Timer
-          ref={timerRef}
-          seconds={timeLimit}
-          running={true}
-          onTimeout={onTimeout} 
-        />
-      </div>
+      {/* Timer only for Task 1 */}
+      {task === 1 && (
+        <div className="mb-6">
+          <Timer
+            ref={timerRef}
+            seconds={timeLimit}
+            running={true}
+            onTimeout={onTimeout}
+          />
+        </div>
+      )}
 
       {task === 1 && (
         <>
