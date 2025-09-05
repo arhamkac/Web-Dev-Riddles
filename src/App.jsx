@@ -1,7 +1,8 @@
 import React, { useState } from "react";
 import StageOne from "./components/StageOne";
+import StageTwo from "./components/StageTwo";
 import Result from "./components/Result";
-import './App.css'
+import "./App.css";
 
 export default function App() {
   const [stage, setStage] = useState("stage1");
@@ -18,12 +19,25 @@ export default function App() {
         <main>
           {stage === "stage1" && (
             <StageOne
-              onWin={() => { setResult("win"); setStage("result"); }}
+              onWin={() => setStage("stage2")}
               onLose={() => { setResult("lose"); setStage("result"); }}
               timeLimit={60}
             />
           )}
-          {stage === "result" && <Result status={result} onRetry={() => { setStage("stage1"); setResult(null); }} />}
+
+          {stage === "stage2" && (
+            <StageTwo
+              onWin={() => { setResult("win"); setStage("result"); }}
+              onLose={() => { setResult("lose"); setStage("result"); }}
+            />
+          )}
+
+          {stage === "result" && (
+            <Result
+              status={result}
+              onRetry={() => { setStage("stage1"); setResult(null); }}
+            />
+          )}
         </main>
 
         <footer className="mt-8 text-center text-white/60 text-xs">

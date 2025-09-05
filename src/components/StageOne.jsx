@@ -4,8 +4,6 @@ import Timer from "./Timer";
 const RIDDLES = [
   { id: 1, q: "I speak without a mouth and hear without ears...", a: "echo", hint: "You hear it in caves" },
   { id: 2, q: "I’m tall when I’m young and short when I’m old...", a: "candle", hint: "On a cake 🎂" },
-  { id: 3, q: "What has keys but can’t open locks?", a: "piano", hint: "It makes music 🎵" },
-  { id: 4, q: "What has hands but can’t clap?", a: "clock", hint: "Tells time ⏰" },
 ];
 
 export default function StageOne({ onWin, onLose, timeLimit = 60 }) {
